@@ -33,11 +33,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         button = (Button) findViewById(R.id.bn);
         textView= (TextView) findViewById(R.id.txt);
-
-        Cache cache = new DiskBasedCache(getCacheDir(), 1024*1024);
-        Network network = new BasicNetwork(new HurlStack());
-        requestQueue = new RequestQueue(cache, network);
-        requestQueue.start();
         button.setOnClickListener(this);
 
     }
@@ -48,16 +43,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(String response) {
                 textView.setText(response);
-                requestQueue.stop();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 textView.setText("Something went wrong: ");
                 error.printStackTrace();
-                requestQueue.stop();
             }
         });
-        requestQueue.add(stringRequest);
+        VolleySingleton.getmInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
     }
 }
